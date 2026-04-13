@@ -1,0 +1,570 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cairo:wght@300;400;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --orange: #FF9A3C;
+    --orange-light: #FFB366;
+    --bg: #0A0A0A;
+    --bg2: #111111;
+    --bg3: #181818;
+    --text: #F5F0E8;
+    --muted: #888;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  .deco-line-long { width: 120px; height: 1px; background: linear-gradient(to right, transparent, var(--orange), transparent); margin: 0 auto; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(60px); pointer-events: none; }
+  .orb1 { width: 300px; height: 300px; background: rgba(255,154,60,0.12); top: -80px; right: -80px; }
+  .orb2 { width: 200px; height: 200px; background: rgba(255,154,60,0.08); bottom: 10%; left: 5%; }
+  .corner-deco { position: absolute; width: 80px; height: 80px; border-color: var(--orange); border-style: solid; opacity: 0.5; }
+  .corner-deco.tl { top: 24px; left: 24px; border-width: 2px 0 0 2px; }
+  .corner-deco.tr { top: 24px; right: 24px; border-width: 2px 2px 0 0; }
+  .corner-deco.bl { bottom: 24px; left: 24px; border-width: 0 0 2px 2px; }
+  .corner-deco.br { bottom: 24px; right: 24px; border-width: 0 2px 2px 0; }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 2rem; background: radial-gradient(ellipse at center, rgba(255,154,60,0.07) 0%, transparent 70%); text-align: center; }
+  .logo-ring { width: 130px; height: 130px; border: 2px solid var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; animation: spin-slow 20s linear infinite; margin-bottom: 12px; }
+  .logo-ring::before { content: ''; position: absolute; width: 118px; height: 118px; border: 1px solid rgba(255,154,60,0.3); border-radius: 50%; }
+  .logo-inner { width: 100px; height: 100px; background: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: spin-slow 20s linear infinite reverse; }
+  .logo-text { font-family: 'Cinzel', serif; font-size: 2.4rem; font-weight: 900; color: var(--orange); }
+  @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .brand-name { font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 8px; color: var(--muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .hero-title { font-family: 'Cinzel', serif; font-size: clamp(1.4rem,4vw,2.5rem); font-weight: 400; color: var(--text); letter-spacing: 2px; margin-bottom: 0.4rem; }
+  .hero-sub { font-size: 0.85rem; color: var(--muted); letter-spacing: 3px; margin-bottom: 1rem; }
+  .star-row { display: flex; gap: 6px; justify-content: center; margin-bottom: 1.2rem; }
+  .star { color: var(--orange); font-size: 13px; }
+  .phone-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 1.2rem; }
+  .phone-badge { background: rgba(255,154,60,0.1); border: 1px solid rgba(255,154,60,0.4); color: var(--orange); padding: 6px 14px; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; }
+  .social-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 1.5rem; }
+  .social-btn { display: flex; align-items: center; gap: 8px; padding: 9px 18px; border: 1px solid rgba(255,154,60,0.4); color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 1px; transition: all 0.25s; background: transparent; font-family: 'Cairo', sans-serif; }
+  .social-btn:hover { border-color: var(--orange); color: var(--orange); background: rgba(255,154,60,0.07); }
+  .social-icon { width: 18px; height: 18px; }
+  .nav-tabs { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
+  .tab-btn { background: transparent; border: 1px solid rgba(255,154,60,0.4); color: var(--muted); padding: 10px 18px; font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s; letter-spacing: 1px; position: relative; overflow: hidden; }
+  .tab-btn::before { content: ''; position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; z-index: 0; }
+  .tab-btn span { position: relative; z-index: 1; }
+  .tab-btn.active, .tab-btn:hover { color: white; border-color: var(--orange); }
+  .tab-btn.active::before, .tab-btn:hover::before { transform: scaleX(1); }
+  .section { display: none; padding: 3rem 1.5rem; max-width: 960px; margin: 0 auto; animation: fadeIn 0.4s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .section-header { text-align: center; margin-bottom: 2rem; }
+  .section-header h2 { font-family: 'Cinzel', serif; font-size: 1.6rem; font-weight: 700; color: var(--orange); letter-spacing: 3px; margin-bottom: 8px; }
+  .note-badge { background: rgba(255,154,60,0.08); border: 1px solid rgba(255,154,60,0.2); color: var(--orange); padding: 6px 14px; font-size: 0.8rem; display: inline-block; margin-top: 8px; }
+  .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem; }
+  .menu-card { background: var(--bg3); border: 1px solid rgba(255,154,60,0.15); overflow: hidden; transition: all 0.3s; position: relative; }
+  .menu-card:hover { border-color: var(--orange); transform: translateY(-3px); }
+  .menu-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent, var(--orange), transparent); opacity: 0; transition: opacity 0.3s; }
+  .menu-card:hover::after { opacity: 1; }
+  .card-img { width: 100%; height: 160px; background: var(--bg2); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .card-img img { width: 100%; height: 100%; object-fit: cover; }
+  .card-img .placeholder-icon { font-size: 2.5rem; opacity: 0.25; }
+  .card-body { padding: 0.9rem 1.1rem 1.1rem; }
+  .card-name { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; margin-bottom: 10px; min-height: 30px; }
+  .price-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .price-opt { padding: 5px 10px; border: 1px solid rgba(255,154,60,0.35); background: transparent; color: var(--muted); font-family: 'Cairo', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .price-opt.selected { background: var(--orange); color: white; border-color: var(--orange); }
+  .price-opt:hover:not(.selected) { border-color: var(--orange); color: var(--orange); }
+  .selected-price-display { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 700; color: var(--orange); margin-bottom: 10px; min-height: 24px; }
+  .qty-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .qty-label { font-size: 0.78rem; color: var(--muted); }
+  .qty-ctrl { display: flex; align-items: center; border: 1px solid rgba(255,154,60,0.3); overflow: hidden; }
+  .qty-btn { background: transparent; border: none; color: var(--orange); width: 30px; height: 30px; font-size: 1.1rem; cursor: pointer; transition: background 0.2s; font-family: 'Cairo', sans-serif; }
+  .qty-btn:hover { background: rgba(255,154,60,0.15); }
+  .qty-num { width: 32px; text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--text); }
+  .add-btn { width: 100%; background: transparent; border: 1px solid var(--orange); color: var(--orange); padding: 8px; font-family: 'Cairo', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; letter-spacing: 1px; transition: all 0.25s; position: relative; overflow: hidden; }
+  .add-btn::before { content: ''; position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 0.25s; }
+  .add-btn span { position: relative; z-index: 1; }
+  .add-btn:hover { color: white; }
+  .add-btn:hover::before { transform: scaleX(1); }
+  .add-btn.added { background: var(--orange); color: white; }
+  .order-section { padding: 3rem 1.5rem; max-width: 900px; margin: 0 auto; border-top: 1px solid rgba(255,154,60,0.2); }
+  .order-header { text-align: center; margin-bottom: 1.5rem; }
+  .order-header h2 { font-family: 'Cinzel', serif; font-size: 1.4rem; color: var(--orange); letter-spacing: 2px; margin-bottom: 0.4rem; }
+  .customer-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 480px) { .customer-fields { grid-template-columns: 1fr; } }
+  .field-group { display: flex; flex-direction: column; gap: 5px; }
+  .field-group label { font-size: 0.78rem; color: var(--muted); letter-spacing: 1px; }
+  .field-input { background: var(--bg3); border: 1px solid rgba(255,154,60,0.25); color: var(--text); padding: 9px 11px; font-family: 'Cairo', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; }
+  .field-input:focus { border-color: var(--orange); }
+  .delivery-toggle { display: flex; gap: 1rem; margin-bottom: 1rem; }
+  .del-opt { flex: 1; padding: 11px; border: 1px solid rgba(255,154,60,0.2); background: var(--bg3); color: var(--muted); text-align: center; cursor: pointer; transition: all 0.2s; font-family: 'Cairo', sans-serif; font-size: 0.88rem; font-weight: 600; }
+  .del-opt.active { border-color: var(--orange); color: var(--orange); background: rgba(255,154,60,0.07); }
+  .order-item-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid rgba(255,154,60,0.08); font-size: 0.83rem; }
+  .order-total-row { display: flex; justify-content: space-between; padding: 10px 0; font-weight: 700; color: var(--orange); font-size: 0.95rem; border-top: 1px solid rgba(255,154,60,0.3); margin-top: 4px; }
+  .order-text-box { background: var(--bg3); border: 1px solid rgba(255,154,60,0.3); padding: 1.1rem; margin-bottom: 1rem; white-space: pre-wrap; font-family: 'Cairo', sans-serif; font-size: 0.88rem; line-height: 1.8; color: var(--text); min-height: 100px; direction: rtl; }
+  .copy-btn-main { width: 100%; background: var(--orange); border: none; color: white; padding: 13px; font-family: 'Cairo', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: 2px; transition: all 0.2s; margin-bottom: 1rem; }
+  .copy-btn-main:hover { background: var(--orange-light); }
+  .welcome-msg { background: rgba(255,154,60,0.08); border: 1px solid rgba(255,154,60,0.25); padding: 1.1rem; text-align: center; display: none; }
+  .welcome-msg.visible { display: block; }
+  .welcome-msg p { color: var(--orange); font-size: 0.95rem; font-weight: 600; }
+  .welcome-msg small { color: var(--muted); font-size: 0.78rem; }
+  .empty-order { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 1.2rem; border: 1px dashed rgba(255,154,60,0.2); }
+  .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.72rem; letter-spacing: 2px; border-top: 1px solid rgba(255,154,60,0.1); }
+  .footer a { color: var(--orange); text-decoration: none; }
+</style>
+
+<div style="background:#0A0A0A;min-height:100vh;">
+  <div class="hero">
+    <div class="orb orb1"></div><div class="orb orb2"></div>
+    <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+    <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+    <div style="margin-bottom:14px;">
+      <div class="logo-ring"><div class="logo-inner"><span class="logo-text">XO</span></div></div>
+    </div>
+    <div class="brand-name">Brost &amp; Sweet</div>
+    <h1 class="hero-title">تجربة طعام لا تُنسى</h1>
+    <p class="hero-sub">UNFORGETTABLE DINING EXPERIENCE</p>
+    <div class="star-row"><span class="star">✦</span><span class="star">✦</span><span class="star">✦</span><span class="star">✦</span><span class="star">✦</span></div>
+    <div class="phone-row">
+      <div class="phone-badge">📞 0599040704</div>
+      <div class="phone-badge">📞 0594277591</div>
+    </div>
+    <div class="social-row">
+      <a class="social-btn" href="https://www.facebook.com/share/1DjahMRuQx/" target="_blank">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>Facebook
+      </a>
+      <a class="social-btn" href="https://www.instagram.com/xo_sebastia?igsh=MWRwbmVyeHZrYWFoNA==" target="_blank">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram
+      </a>
+    </div>
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="showSection('meals')" id="tab-meals"><span>🍗 وجبة فردية</span></button>
+      <button class="tab-btn" onclick="showSection('sandwiches')" id="tab-sandwiches"><span>🥪 سندويش</span></button>
+      <button class="tab-btn" onclick="showSection('family')" id="tab-family"><span>👨‍👩‍👧 عائلي</span></button>
+      <button class="tab-btn" onclick="showSection('sweets')" id="tab-sweets"><span>🍰 حلويات</span></button>
+    </div>
+  </div>
+
+  <div class="section active" id="section-meals">
+    <div class="section-header"><h2>✦ وجبة فردية ✦</h2><div class="deco-line-long"></div><div class="note-badge">يمكن إضافة كولا + بطاطا بسعر 4 شيكل</div></div>
+    <div class="menu-grid" id="grid-meals"></div>
+  </div>
+
+  <div class="section" id="section-sandwiches">
+    <div class="section-header"><h2>✦ سندويش ✦</h2><div class="deco-line-long"></div><div class="note-badge">يمكن إضافة جبنة بسعر 1 شيكل</div></div>
+    <div class="menu-grid" id="grid-sandwiches"></div>
+  </div>
+
+  <div class="section" id="section-family">
+    <div class="section-header"><h2>✦ وجبات عائلية ✦</h2><div class="deco-line-long"></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:700px;margin:0 auto;">
+      <div>
+        <div style="font-family:'Cinzel',serif;color:var(--orange);font-size:1.1rem;letter-spacing:2px;margin-bottom:1rem;text-align:center;">عائلي بروست</div>
+        <div class="menu-grid" style="grid-template-columns:1fr;" id="grid-family-brost"></div>
+      </div>
+      <div>
+        <div style="font-family:'Cinzel',serif;color:var(--orange);font-size:1.1rem;letter-spacing:2px;margin-bottom:1rem;text-align:center;">عائلي كرسبي</div>
+        <div class="menu-grid" style="grid-template-columns:1fr;" id="grid-family-crispy"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="section-sweets">
+    <div class="section-header"><h2>✦ حلويات ✦</h2><div class="deco-line-long"></div><div class="note-badge">يمكن إضافة أنواع مختلفة من الشوكولاتة</div></div>
+    <div class="menu-grid" id="grid-sweets"></div>
+  </div>
+
+  <div class="order-section">
+    <div class="order-header"><h2>✦ طلبك ✦</h2><p style="color:var(--muted);font-size:0.82rem;">أضف بياناتك لإتمام الطلب</p></div>
+    <div class="customer-fields">
+      <div class="field-group"><label>الاسم</label><input class="field-input" type="text" id="custName" placeholder="اسمك الكريم..." oninput="updateOrderText()"></div>
+      <div class="field-group"><label>رقم الهاتف</label><input class="field-input" type="tel" id="custPhone" placeholder="05X XXX XXXX" oninput="updateOrderText()"></div>
+    </div>
+    <div class="delivery-toggle">
+      <div class="del-opt active" id="opt-delivery" onclick="setDelivery(true)">🚗 توصيل</div>
+      <div class="del-opt" id="opt-pickup" onclick="setDelivery(false)">🏃 استلام من المحل</div>
+    </div>
+    <div class="field-group" id="addressField" style="margin-bottom:1rem;">
+      <label>العنوان</label>
+      <input class="field-input" type="text" id="custAddress" placeholder="المنطقة، الشارع، وصف الدار..." oninput="updateOrderText()">
+    </div>
+    <div id="orderItemsList"><div class="empty-order">لم تضف أي عناصر بعد — اختر من القائمة أعلاه</div></div>
+    <div class="order-text-box" id="orderTextBox" dir="rtl">سيظهر طلبك هنا...</div>
+    <button class="copy-btn-main" onclick="copyOrder()">📋 انسخ الطلب وأرسله للمطعم</button>
+    <div class="welcome-msg" id="welcomeMsg">
+      <p>✦ شكراً لك! طلبك جاهز للإرسال ✦</p>
+      <small>نتمنى لك وجبة شهية مع مطعم XO — سيتواصل معك فريقنا قريباً 🧡</small>
+    </div>
+  </div>
+
+  <div class="footer">
+    ✦ XO BROST &amp; SWEET ✦ &nbsp;|&nbsp;
+    <a href="https://www.facebook.com/share/1DjahMRuQx/" target="_blank">Facebook</a> &nbsp;|&nbsp;
+    <a href="https://www.instagram.com/xo_sebastia?igsh=MWRwbmVyeHZrYWFoNA==" target="_blank">Instagram</a>
+    &nbsp;|&nbsp; 0599040704 \ 0594277591
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// بيانات القائمة الكاملة
+// كل منتج إما له price ثابت أو prices[] متعددة
+// prices[]: { label = اسم الخيار، price = السعر بالشيكل }
+// ══════════════════════════════════════════════════════
+const menuData = {
+
+  // وجبات فردية — سعر واحد ثابت لكل وجبة
+  meals: [
+    { id:'ml1', name:'بروست',     desc:'قطع بروست مقرمشة طازجة',  price:21, img:'' },
+    { id:'ml2', name:'مسحب',      desc:'مسحب دجاج طري ولذيذ',     price:21, img:'' },
+    { id:'ml3', name:'برجر جاج',  desc:'برجر دجاج مع صوص خاص',    price:15, img:'' },
+    { id:'ml4', name:'برجر',      desc:'برجر لحم طازج',            price:18, img:'' },
+    { id:'ml5', name:'ستيك دجاج', desc:'ستيك دجاج مشوي طري',      price:22, img:'' },
+  ],
+
+  // سندويشات — نقانق له سعران، الباقي سعر ثابت
+  sandwiches: [
+    { id:'sw1', name:'كرسبي',      desc:'دجاج كرسبي مقرمش',       price:15, img:'' },
+    { id:'sw2', name:'ستيك دجاج',  desc:'ستيك دجاج طري في خبز',   price:16, img:'' },
+    { id:'sw3', name:'ستيك عجل',   desc:'ستيك عجل طري في خبز',    price:20, img:'' },
+    {
+      // نقانق: خياران بدون تسمية كبير/صغير — فقط النوع والسعر
+      id:'sw4', name:'نقانق', desc:'نقانق مشوية — اختر النوع', img:'',
+      prices: [
+        { label:'سبرايت', price:7 }, // نقانق سبرايت بـ 7 شيكل
+        { label:'XL',     price:8 }, // نقانق XL بـ 8 شيكل
+      ]
+    },
+  ],
+
+  // عائلي بروست — سعر حسب عدد القطع
+  familyBrost: [
+    { id:'fb1', name:'9 قطع',   desc:'وجبة عائلية بروست 9 قطع',   price:80,  img:'' },
+    { id:'fb2', name:'15 قطعة', desc:'وجبة عائلية بروست 15 قطعة', price:130, img:'' },
+    { id:'fb3', name:'21 قطعة', desc:'وجبة عائلية بروست 21 قطعة', price:165, img:'' },
+  ],
+
+  // عائلي كرسبي — سعر حسب عدد القطع
+  familyCrispy: [
+    { id:'fc1', name:'16 قطعة', desc:'وجبة عائلية كرسبي 16 قطعة', price:85,  img:'' },
+    { id:'fc2', name:'25 قطعة', desc:'وجبة عائلية كرسبي 25 قطعة', price:120, img:'' },
+    { id:'fc3', name:'30 قطعة', desc:'وجبة عائلية كرسبي 30 قطعة', price:145, img:'' },
+  ],
+
+  // حلويات — كلها بأسعار متعددة بدون تسمية كبير/صغير
+  sweets: [
+    {
+      id:'s1', name:'فشافيش', desc:'فشافيش متنوعة — اختر السعر', img:'',
+      prices: [
+        { label:'5₪',  price:5  },
+        { label:'10₪', price:10 },
+        { label:'20₪', price:20 },
+      ]
+    },
+    {
+      id:'s2', name:'كريب', desc:'كريب بنكهات مختلفة', img:'',
+      prices: [
+        { label:'10₪', price:10 },
+        { label:'12₪', price:12 },
+      ]
+    },
+    {
+      id:'s3', name:'بان كيك', desc:'بان كيك طازج وشهي', img:'',
+      prices: [
+        { label:'15₪', price:15 },
+        { label:'25₪', price:25 },
+      ]
+    },
+    {
+      id:'s4', name:'وفل', desc:'وفل بنكهات متعددة', img:'',
+      prices: [
+        { label:'12₪', price:12 },
+        { label:'15₪', price:15 },
+      ]
+    },
+    {
+      // قشطوطة: سعر واحد 7 شيكل
+      id:'s5', name:'قشطوطة', desc:'قشطوطة حلوة', img:'',
+      price: 7  // سعر ثابت 7 شيكل كما طُلب
+    },
+    {
+      // تشيز كيك: سعر أساسي 8 وخيار إضافة بستاشيو بـ 10
+      id:'s6', name:'تشيز كيك', desc:'تشيز كيك كريمي — يمكن إضافة بستاشيو', img:'',
+      prices: [
+        { label:'عادي 8₪',         price:8  }, // تشيز كيك بدون إضافات
+        { label:'+ بستاشيو 10₪',   price:10 }, // تشيز كيك مع إضافة بستاشيو
+      ]
+    },
+    {
+      // رول XO: سعر واحد ثابت 6 شيكل
+      id:'s7', name:'رول XO', desc:'رول XO الخاص بنا', img:'',
+      price: 6
+    },
+    {
+      // مهيتو: سبرايت بـ 5 وXL بـ 7 — بدون كبير/صغير
+      id:'s8', name:'مهيتو', desc:'مهيتو منعش — اختر النوع', img:'',
+      prices: [
+        { label:'سبرايت 5₪', price:5 }, // مهيتو سبرايت بـ 5 شيكل
+        { label:'XL 7₪',     price:7 }, // مهيتو XL بـ 7 شيكل
+      ]
+    },
+  ]
+};
+
+// selectedPrices: يحفظ الخيار المحدد لكل منتج متعدد الأسعار
+// المفتاح = id المنتج، القيمة = { label, price }
+const selectedPrices = {};
+
+// cart: يحفظ عناصر الطلب
+// المفتاح = id_سعر لتمييز نفس المنتج بأسعار مختلفة
+const cart = {};
+
+// qtyMap: يحفظ الكمية المختارة لكل بطاقة
+const qtyMap = {};
+
+// isDelivery: توصيل = true، استلام = false
+let isDelivery = true;
+
+// ══════════════════════════════════════════════════════
+// makeCard: تبني HTML بطاقة منتج واحد
+// تحدد تلقائياً إذا المنتج له أسعار متعددة أم واحد
+// ══════════════════════════════════════════════════════
+function makeCard(item) {
+  // التحقق هل المنتج له مصفوفة أسعار متعددة
+  const hasMulti = item.prices && item.prices.length > 0;
+
+  // تعيين الخيار الأول افتراضياً إذا لم يُختر شيء بعد
+  if (hasMulti && !selectedPrices[item.id]) {
+    selectedPrices[item.id] = item.prices[0];
+  }
+
+  // بناء HTML منطقة السعر
+  let priceHTML = '';
+  if (hasMulti) {
+    // منتج متعدد الأسعار: أزرار اختيار مع تمييز الأول
+    priceHTML =
+      `<div class="price-selector">` +
+      item.prices.map((opt, idx) =>
+        `<button class="price-opt ${idx===0?'selected':''}"
+          id="popt-${item.id}-${idx}"
+          onclick="selectPrice('${item.id}',${idx},${JSON.stringify(item.prices).replace(/"/g,"'")})">
+          ${opt.label}
+        </button>`
+      ).join('') +
+      `</div>
+      <div class="selected-price-display" id="pdisplay-${item.id}">${item.prices[0].price} ₪</div>`;
+  } else {
+    // منتج بسعر واحد: عرض مباشر بدون أزرار
+    priceHTML = `<div class="selected-price-display">${item.price} ₪</div>`;
+  }
+
+  // إرجاع HTML البطاقة كاملاً
+  return `
+    <div class="menu-card">
+      <div class="card-img">
+        ${item.img
+          ? `<img src="${item.img}" alt="${item.name}" onerror="this.style.display='none'">`
+          : `<span class="placeholder-icon">🍽</span>`}
+      </div>
+      <div class="card-body">
+        <div class="card-name">${item.name}</div>
+        <div class="card-desc">${item.desc}</div>
+        ${priceHTML}
+        <div class="qty-row">
+          <span class="qty-label">الكمية:</span>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+            <span class="qty-num" id="qty-${item.id}">1</span>
+            <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+          </div>
+        </div>
+        <button class="add-btn" id="addbtn-${item.id}" onclick="addToCart('${item.id}','${item.name}',${hasMulti})">
+          <span>أضف للطلب</span>
+        </button>
+      </div>
+    </div>`;
+}
+
+// renderGrid: تحقن بطاقات المنتجات داخل شبكة HTML معينة
+function renderGrid(items, gridId) {
+  const el = document.getElementById(gridId);
+  if (el) el.innerHTML = items.map(makeCard).join('');
+}
+
+// رسم كل الشبكات عند تحميل الصفحة
+renderGrid(menuData.meals,        'grid-meals');
+renderGrid(menuData.sandwiches,   'grid-sandwiches');
+renderGrid(menuData.familyBrost,  'grid-family-brost');
+renderGrid(menuData.familyCrispy, 'grid-family-crispy');
+renderGrid(menuData.sweets,       'grid-sweets');
+
+// ══════════════════════════════════════════════════════
+// selectPrice: يُحدّث السعر المختار ومظهر الأزرار
+// itemId: id المنتج | selectedIdx: رقم الخيار المضغوط
+// prices: مصفوفة الأسعار الكاملة للمنتج
+// ══════════════════════════════════════════════════════
+function selectPrice(itemId, selectedIdx, prices) {
+  selectedPrices[itemId] = prices[selectedIdx]; // حفظ الخيار الجديد
+
+  // إزالة التمييز من كل الأزرار ثم إضافته للمضغوط فقط
+  prices.forEach((_, idx) => {
+    const b = document.getElementById(`popt-${itemId}-${idx}`);
+    if (b) b.classList.remove('selected');
+  });
+  const ab = document.getElementById(`popt-${itemId}-${selectedIdx}`);
+  if (ab) ab.classList.add('selected');
+
+  // تحديث عرض السعر المحدد تحت الأزرار
+  const d = document.getElementById(`pdisplay-${itemId}`);
+  if (d) d.textContent = `${prices[selectedIdx].price} ₪`;
+}
+
+// changeQty: يزيد أو ينقص الكمية — لا تقل عن 1
+function changeQty(id, delta) {
+  qtyMap[id] = Math.max(1, (qtyMap[id] || 1) + delta);
+  const el = document.getElementById('qty-' + id);
+  if (el) el.textContent = qtyMap[id];
+}
+
+// ══════════════════════════════════════════════════════
+// addToCart: يضيف المنتج للطلب بالسعر والكمية المختارين
+// id: id المنتج | name: اسمه | hasMulti: هل متعدد الأسعار
+// ══════════════════════════════════════════════════════
+function addToCart(id, name, hasMulti) {
+  let price, label;
+
+  if (hasMulti) {
+    // خذ السعر والاسم من الخيار المحدد في selectedPrices
+    const sel = selectedPrices[id];
+    price = sel.price;
+    label = sel.label;
+  } else {
+    // ابحث عن السعر الثابت في كل بيانات المنيو
+    const all = [
+      ...menuData.meals, ...menuData.sandwiches,
+      ...menuData.familyBrost, ...menuData.familyCrispy, ...menuData.sweets
+    ];
+    const found = all.find(i => i.id === id);
+    price = found ? found.price : 0;
+    label = null;
+  }
+
+  const qty = qtyMap[id] || 1;
+  // دمج اسم المنتج مع اسم الخيار إذا وُجد
+  const fullName = label ? `${name} (${label})` : name;
+  // مفتاح فريد في السلة = id + السعر (لتمييز نفس المنتج بأسعار مختلفة)
+  const key = `${id}_${price}`;
+
+  if (cart[key]) {
+    cart[key].qty += qty; // زيادة الكمية إذا موجود مسبقاً
+  } else {
+    cart[key] = { name: fullName, price, qty }; // إضافة جديد
+  }
+
+  // تأثير بصري مؤقت على زر الإضافة
+  const btn = document.getElementById('addbtn-' + id);
+  if (btn) {
+    btn.classList.add('added');
+    btn.querySelector('span').textContent = '✓ تمت الإضافة';
+    setTimeout(() => {
+      btn.classList.remove('added');
+      btn.querySelector('span').textContent = 'أضف للطلب';
+    }, 1200);
+  }
+  updateOrderText();
+}
+
+// setDelivery: يبدّل بين التوصيل والاستلام
+function setDelivery(val) {
+  isDelivery = val;
+  document.getElementById('opt-delivery').classList.toggle('active', val);
+  document.getElementById('opt-pickup').classList.toggle('active', !val);
+  document.getElementById('addressField').style.display = val ? 'flex' : 'none';
+  updateOrderText();
+}
+
+// ══════════════════════════════════════════════════════
+// updateOrderText: يبني ملخص الطلب النصي ويعرضه
+// يُستدعى تلقائياً عند كل تغيير في الطلب أو البيانات
+// ══════════════════════════════════════════════════════
+function updateOrderText() {
+  const name    = document.getElementById('custName').value.trim();
+  const phone   = document.getElementById('custPhone').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+  const items   = Object.values(cart);
+  const box     = document.getElementById('orderTextBox');
+  const listEl  = document.getElementById('orderItemsList');
+
+  // السلة فارغة: عرض رسالة فارغة والخروج
+  if (items.length === 0) {
+    box.textContent = 'سيظهر طلبك هنا...';
+    listEl.innerHTML = '<div class="empty-order">لم تضف أي عناصر بعد — اختر من القائمة أعلاه</div>';
+    return;
+  }
+
+  let total = 0, itemsText = '', listHTML = '';
+
+  // بناء كل سطر من سطور الطلب
+  items.forEach(it => {
+    const lt = it.price * it.qty; // إجمالي هذا الصنف
+    total += lt;
+    itemsText += `  • ${it.name} × ${it.qty} = ${lt} ₪\n`;
+    listHTML += `
+      <div class="order-item-row">
+        <span style="color:var(--text)">${it.name} × ${it.qty}</span>
+        <span style="color:var(--orange);font-weight:600">${lt} ₪</span>
+      </div>`;
+  });
+
+  listHTML += `<div class="order-total-row"><span>المجموع</span><span>${total} ₪</span></div>`;
+  listEl.innerHTML = listHTML;
+
+  const deliveryLine = isDelivery
+    ? `📍 التوصيل: نعم\n🏠 العنوان: ${address || '...'}`
+    : `🏃 الاستلام: من المحل مباشرة`;
+
+  // النص الكامل الجاهز للنسخ والإرسال
+  box.textContent =
+`━━━━━━━━━━━━━━━━━━━━
+🍗 طلب جديد — مطعم XO
+━━━━━━━━━━━━━━━━━━━━
+👤 الاسم: ${name || '...'}
+📱 الهاتف: ${phone || '...'}
+${deliveryLine}
+━━━━━━━━━━━━━━━━━━━━
+📋 الطلب:
+${itemsText.trim()}
+━━━━━━━━━━━━━━━━━━━━
+💰 المجموع: ${total} ₪
+━━━━━━━━━━━━━━━━━━━━`;
+}
+
+// copyOrder: ينسخ نص الطلب ويعرض رسالة الترحيب
+function copyOrder() {
+  const text = document.getElementById('orderTextBox').textContent;
+  if (Object.keys(cart).length === 0) { alert('الرجاء إضافة منتجات أولاً!'); return; }
+
+  const done = () => {
+    document.getElementById('welcomeMsg').classList.add('visible');
+    document.querySelector('.copy-btn-main').textContent = '✓ تم النسخ!';
+    setTimeout(() => { document.querySelector('.copy-btn-main').textContent = '📋 انسخ الطلب وأرسله للمطعم'; }, 2500);
+  };
+
+  // Clipboard API الحديثة مع fallback للمتصفحات القديمة
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(done).catch(() => { fallback(text); done(); });
+  } else { fallback(text); done(); }
+}
+
+// fallback: طريقة نسخ قديمة عبر textarea مؤقت
+function fallback(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+}
+
+// showSection: يُظهر القسم المطلوب ويخفي الباقي
+function showSection(name) {
+  ['meals','sandwiches','family','sweets'].forEach(s => {
+    document.getElementById('section-' + s).classList.remove('active');
+    document.getElementById('tab-'     + s).classList.remove('active');
+  });
+  document.getElementById('section-' + name).classList.add('active');
+  document.getElementById('tab-'     + name).classList.add('active');
+  document.getElementById('section-' + name).scrollIntoView({ behavior:'smooth' });
+}
+</script>
