@@ -1,2 +1,0 @@
-# xo-menu
-menu
